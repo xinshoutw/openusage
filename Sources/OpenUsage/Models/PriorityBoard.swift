@@ -144,6 +144,8 @@ struct PriorityBoard {
     /// Accounts with no first reading yet, in dashboard order. Each shows as a skeleton row under the rest.
     let waiting: [Provider]
     let summary: Summary
+    /// Each line's place in the dashboard, so the menu bar stacks an account's values in panel order.
+    var dashboardOrder: [String: Int] = [:]
     /// Every account reported and nothing, pinned or not, is running out.
     let showsClearRow: Bool
 
@@ -207,6 +209,7 @@ struct PriorityBoard {
             usedUp: ranked.filter { $0.reason.section == .usedUp },
             useItOrLoseIt: ranked.filter { $0.reason.section == .useItOrLoseIt && !$0.isPinned },
             notices: notices, waiting: waiting, summary: summary,
+            dashboardOrder: Dictionary(lines.enumerated().map { ($1.1.id, $0) }, uniquingKeysWith: { first, _ in first }),
             showsClearRow: !awaitingUsage && notices.isEmpty && runningOut.isEmpty
         )
     }

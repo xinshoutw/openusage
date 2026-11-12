@@ -7,6 +7,7 @@ struct MenuBarContent: Equatable {
         let label: String
         let shortLabel: String
         let value: String
+        var order = 0
     }
 
     let items: [Item]
@@ -16,7 +17,7 @@ struct MenuBarContent: Equatable {
     var isEmpty: Bool { items.isEmpty }
 
     /// Items gathered by account in first-appearance order, two at most per group: each group draws one
-    /// mark with its values stacked, unlabelled and read positionally.
+    /// mark with its values stacked in panel order, unlabelled and read positionally.
     var groups: [[Item]] {
         var order: [String] = []
         var byAccount: [String: [Item]] = [:]
@@ -25,7 +26,7 @@ struct MenuBarContent: Equatable {
             byAccount[item.provider.id, default: []].append(item)
         }
         return order.flatMap { id in
-            let all = byAccount[id] ?? []
+            let all = (byAccount[id] ?? []).sorted { $0.order < $1.order }
             return stride(from: 0, to: all.count, by: 2).map { Array(all[$0..<min($0 + 2, all.count)]) }
         }
     }
@@ -56,7 +57,8 @@ enum MenuBarContentBuilder {
                 provider: provider,
                 label: label,
                 shortLabel: shortLabel(label),
-                value: line.data.menuBarValue
+                value: line.data.menuBarValue,
+                order: board.dashboardOrder[line.id] ?? 0
             )
         }
         return MenuBarContent(items: shown, overflow: max(0, counted.count - shown.count))

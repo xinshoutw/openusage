@@ -201,6 +201,12 @@ final class MenuBarContentTests: XCTestCase {
         XCTAssertEqual(strip.groups.map { $0.map(\.shortLabel) }, [["A", "C"], ["E"], ["B"]])
     }
 
+    func testAnAccountsStackFollowsThePanelOrderNotTheUrgency() {
+        let strip = content(.upToTwo, account(personal, limit("Session", used: 91), limit("Weekly", used: 99)))
+        XCTAssertEqual(strip.items.map(\.shortLabel), ["Weekly", "Session"])
+        XCTAssertEqual(strip.groups.map { $0.map(\.shortLabel) }, [["Session", "Weekly"]])
+    }
+
     func testThePreviewShowsExactlyTheNumberPicked() {
         for limit in MenuBarLimit.allCases where limit != .iconOnly {
             let sample = PriorityIconsPreview.sample(limit: limit)
