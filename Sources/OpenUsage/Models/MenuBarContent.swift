@@ -15,6 +15,21 @@ struct MenuBarContent: Equatable {
 
     var isEmpty: Bool { items.isEmpty }
 
+    /// Items gathered by account in first-appearance order, two at most per group: each group draws one
+    /// mark with its values stacked, unlabelled and read positionally.
+    var groups: [[Item]] {
+        var order: [String] = []
+        var byAccount: [String: [Item]] = [:]
+        for item in items {
+            if byAccount[item.provider.id] == nil { order.append(item.provider.id) }
+            byAccount[item.provider.id, default: []].append(item)
+        }
+        return order.flatMap { id in
+            let all = byAccount[id] ?? []
+            return stride(from: 0, to: all.count, by: 2).map { Array(all[$0..<min($0 + 2, all.count)]) }
+        }
+    }
+
     var accessibilityText: String {
         let shown = items.map { "\($0.provider.fullName) \($0.label) \($0.value)" }
         let more = overflow > 0 ? ["\(overflow) more"] : []

@@ -313,7 +313,7 @@ struct PriorityIconsPreview: View {
     private static let height: CGFloat = 30
     private static let scale: CGFloat = 0.8
     private static let samples: [(kind: ProviderKind, badge: String?, label: String, value: String)] = [
-        (.claude, "P", "Weekly", "38%"), (.claude, "A1", "Session", "26%"), (.codex, nil, "Weekly", "31%"),
+        (.claude, "P", "Weekly", "38%"), (.claude, "P", "Session", "26%"), (.codex, nil, "Weekly", "31%"),
         (.cursor, nil, "Extra", "$310"), (.antigravity, nil, "Gemini", "12%"), (.grok, nil, "Weekly", "9%"),
         (.copilot, nil, "Credits", "7%"),
     ]
@@ -323,7 +323,7 @@ struct PriorityIconsPreview: View {
         let shown = samples.prefix(limit.count).enumerated().map { index, sample in
             MenuBarContent.Item(
                 id: "sample.\(index)",
-                provider: Provider(id: "sample.\(index)", kind: sample.kind, badge: sample.badge),
+                provider: Provider(id: "sample.\(sample.kind.rawValue).\(sample.badge ?? "")", kind: sample.kind, badge: sample.badge),
                 label: sample.label,
                 shortLabel: sample.label,
                 value: sample.value

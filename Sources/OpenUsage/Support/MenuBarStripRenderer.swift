@@ -79,7 +79,8 @@ struct MenuBarTextStrip: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            ForEach(content.items) { item in
+            ForEach(content.groups, id: \.[0].id) { group in
+                let item = group[0]
                 HStack(spacing: 4) {
                     glyph(item.provider.icon)
                         .overlay(alignment: .bottomTrailing) {
@@ -93,7 +94,7 @@ struct MenuBarTextStrip: View {
                         // (vertically on both sides, keeping the mark centred on its values) or it is cut off.
                         .padding(.trailing, item.provider.badge == nil ? 0 : AccountBadge.overhang.width)
                         .padding(.vertical, item.provider.badge == nil ? 0 : AccountBadge.overhang.height)
-                    labelledValue(item)
+                    values(group)
                 }
             }
             if content.overflow > 0 {
@@ -112,14 +113,19 @@ struct MenuBarTextStrip: View {
         .compositingGroup()
     }
 
-    private func labelledValue(_ item: MenuBarContent.Item) -> some View {
-        VStack(alignment: .leading, spacing: -2) {
-            Text(item.shortLabel)
-                .font(.system(size: 9, weight: .medium))
-            Text(item.value)
-                .font(.system(size: 11, weight: .bold))
+    /// One value as a single large number, two stacked on two tight lines, no labels.
+    @ViewBuilder
+    private func values(_ group: [MenuBarContent.Item]) -> some View {
+        if group.count == 1 {
+            Text(group[0].value)
+                .font(.system(size: 12, weight: .bold))
+        } else {
+            VStack(alignment: .trailing, spacing: -2) {
+                ForEach(group) { Text($0.value) }
+            }
+            .font(.system(size: 9, weight: .semibold))
+            .fixedSize()
         }
-        .fixedSize()
     }
 
     private func overflowCount(_ count: Int) -> some View {

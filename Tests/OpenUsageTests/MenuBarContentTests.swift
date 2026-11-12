@@ -194,6 +194,13 @@ final class MenuBarContentTests: XCTestCase {
         XCTAssertEqual(strip.items.map(\.shortLabel), ["A", "B", "C"])
     }
 
+    func testAnAccountsLimitsStackInPairsUnderOneMark() {
+        let strip = content(.upToFive,
+                            account(personal, limit("A", used: 99), limit("C", used: 97), limit("E", used: 95)),
+                            account(chatGPT, limit("B", used: 98)))
+        XCTAssertEqual(strip.groups.map { $0.map(\.shortLabel) }, [["A", "C"], ["E"], ["B"]])
+    }
+
     func testThePreviewShowsExactlyTheNumberPicked() {
         for limit in MenuBarLimit.allCases where limit != .iconOnly {
             let sample = PriorityIconsPreview.sample(limit: limit)

@@ -10,7 +10,8 @@ Priority lists.
 - With **Always Show In Menu Bar** on (off by default), it lists everything Priority does, in its
   order: Pinned, Running Out, Use It or Lose It, then Used Up. A pinned limit shows once, where
   Priority lists it.
-- Each limit shows the provider's mark, a short name, and its value. An account can appear more than once.
+- Each account shows its mark once with up to two values stacked beside it, no names, in the strip's
+  order. A third limit of the same account gets its own mark.
 - Limits past that number show as a count, like `+7`. Used Up limits never count. With Always Show
   In Menu Bar off, only limits running out show or count.
 - With nothing to show, or with **App Icon Only**, the strip shows the app icon.
